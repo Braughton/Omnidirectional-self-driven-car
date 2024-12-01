@@ -21,6 +21,8 @@ Servo ServoCamara;
 #define Echo2 17
 //servo
 #define Ser 8 
+//Encoder
+#define tacometro 21 
 //Variables
 int pulso = 0;
 void setup(){
@@ -45,6 +47,9 @@ void setup(){
   pinMode(Trigger2, OUTPUT);
   pinMode(Echo1, INPUT);
   pinMode(Echo2, INPUT);
+  //Configurando la interrupcion del encoder
+  pinMode(tacometro,INPUT);
+  attachInterrupt(digitalPinToInterrupt(tacometro),Encoder,FALLING);
 }
 void loop(){
 
@@ -136,3 +141,7 @@ int Distancia(int Tr,int Ec){
   pulso = pulseIn(Ec,HIGH);
   return pulso/58.2;
 }
+void Encoder(){
+  ticks++;
+}
+
