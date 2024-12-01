@@ -6,9 +6,10 @@ Servo ServoCamara;
 #include"Variables.h"
 #include"Parametros.h"
 #include"Banderas.h"
+#include"FuncionesPixy.h"
 #include"FuncionesMovimiento.h"
 #include"Funciones.h"
-#include"FuncionesPixy.h"
+
 
 void setup(){
   Serial.begin(115200);//Inicializando comunicacion serial
@@ -61,9 +62,23 @@ void loop(){
   if(!modo){
     Xresultante=detectarLineas();
     Frontal(Xresultante);
-  }else{
+  }else if(!Alineado){
+  Xresultante=detectarLineas() + offset;
+  while(Xresultante!=0){
+    Xresultante=detectarLineas() + offset;
+    Serial.println(Xresultante);
+    if (Xresultante<0){
+      LateralD();
+      Espera(1);
+      Alto();
+    }else{
+      LateralI();
+      Espera(1);
+      Alto();
+    }
+  }
+  Alineado=1;
+  Serial.print("alineado");
     //alinear el vehiculo con el carril izquierdo , cambiar al modulo de deteccion de objetos y analizar el entorno en busqueda de un lugar de estacionamiento
   }
-
-
 }
