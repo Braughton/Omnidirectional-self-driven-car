@@ -1,16 +1,15 @@
-//Bibliotecas
 #include <Pixy2.h>
-#include <Servo.h>
-#include <Definiciones.h>
-#include<Variables.h>
-#include<Parametros.h>
-#include<Banderas.h>
-#include<FuncionesMovimiento.h>
-#include<Funciones.h>
-
-
 Pixy2 pixy;//Creando el objeto(Pixy)
+#include <Servo.h>
 Servo ServoCamara;
+#include "Definiciones.h"
+#include"Variables.h"
+#include"Parametros.h"
+#include"Banderas.h"
+#include"FuncionesMovimiento.h"
+#include"Funciones.h"
+#include"FuncionesPixy.h"
+
 void setup(){
   Serial.begin(115200);//Inicializando comunicacion serial
   pixy.init(); //inicializando la camara
@@ -44,7 +43,11 @@ void loop(){
   if (HC1>DistanciaMaximaCajon && HC2 > DistanciaMaximaCajon) {
     modo=1;
   }else{
+    Rebote++;
+    if(Rebote>MaximoRebote){
     modo=0;
+    Rebote=0;
+    }
   }
   if(modo!=modoPrevio){
     if(modo){
@@ -57,10 +60,10 @@ void loop(){
   }
   if(!modo){
     Xresultante=detectarLineas();
+    Frontal(Xresultante);
   }else{
     //alinear el vehiculo con el carril izquierdo , cambiar al modulo de deteccion de objetos y analizar el entorno en busqueda de un lugar de estacionamiento
   }
 
 
 }
-
