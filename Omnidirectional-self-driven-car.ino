@@ -24,7 +24,13 @@ Servo ServoCamara;
 //Encoder
 #define tacometro 21 
 //Variables
+//HC-SR-04
 int pulso = 0;
+//Caracterizacion de los motores
+const int PWMmin1 = 104;
+const int PWMmin2 = 98;
+const int PWMmin3 = 123;
+const int PWMmin4 = 116;
 void setup(){
   Serial.begin(115200);//Inicializando comunicacion serial
   pixy.init(); //inicializando la camara
@@ -144,4 +150,21 @@ int Distancia(int Tr,int Ec){
 void Encoder(){
   ticks++;
 }
-
+int detectarLineas() {
+  Xresultante=0;
+  x0t=0;
+  x1t=0;
+  pixy.line.getAllFeatures();
+  CountL=pixy.line.numVectors;
+  for (int i=0; i<CountL; i++) {
+    x0[i] = pixy.line.vectors[i].m_x0-39;
+    x1[i] = pixy.line.vectors[i].m_x1-39;
+  }
+  for(int i=0;i<CountL;i++){
+    x0t=x0t+x0[i];
+    x1t=x1t+x1[i];
+  }
+  Xresultante=x1t-x0t;
+  Serial.println(Xresultante);
+  return(Xresultante);
+}
