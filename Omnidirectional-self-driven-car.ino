@@ -1,3 +1,5 @@
+#include <Pixy2.h>
+Pixy2 pixy;//Creando el objeto(Pixy)
 #define IN1 13
 #define IN2 12
 #define IN3 2
@@ -7,7 +9,10 @@
 #define IN7 7
 #define IN8 6
 void setup(){
-  Serial.begin(115200);
+  Serial.begin(115200);//Inicializando comunicacion serial
+  pixy.init(); //inicializando la camara
+  pixy.changeProg("line");//Cambiando el modo inicial de la camara a deteccion de lineas
+  //Configurando los pines de control de los puentes H
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
   pinMode(IN3, OUTPUT);
