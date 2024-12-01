@@ -1,5 +1,8 @@
+//Bibliotecas
 #include <Pixy2.h>
+//Objetos
 Pixy2 pixy;//Creando el objeto(Pixy)
+//Definiciones
 #define IN1 13
 #define IN2 12
 #define IN3 2
@@ -8,6 +11,12 @@ Pixy2 pixy;//Creando el objeto(Pixy)
 #define IN6 5
 #define IN7 7
 #define IN8 6
+#define Trigger1 14
+#define Trigger2 15
+#define Echo1 16
+#define Echo2 17
+//Variables
+int pulso = 0;
 void setup(){
   Serial.begin(115200);//Inicializando comunicacion serial
   pixy.init(); //inicializando la camara
@@ -21,6 +30,11 @@ void setup(){
   pinMode(IN6, OUTPUT);
   pinMode(IN7, OUTPUT);
   pinMode(IN8, OUTPUT);
+  //Pines asociados a los sensores ultrasonicos
+  pinMode(Trigger1, OUTPUT);
+  pinMode(Trigger2, OUTPUT);
+  pinMode(Echo1, INPUT);
+  pinMode(Echo2, INPUT);
 }
 void loop(){
 
@@ -104,4 +118,11 @@ void Alto() {
   digitalWrite(IN6, LOW);
   digitalWrite(IN7, LOW); 
   digitalWrite(IN8, LOW);
+}
+int Distancia(int Tr,int Ec){
+  digitalWrite(Tr,HIGH);
+  delay(1);
+  digitalWrite(Tr,LOW);
+  pulso = pulseIn(Ec,HIGH);
+  return pulso/58.2;
 }
