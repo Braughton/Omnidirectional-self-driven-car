@@ -1,8 +1,11 @@
 //Bibliotecas
 #include <Pixy2.h>
+#include <Servo.h>
 //Objetos
 Pixy2 pixy;//Creando el objeto(Pixy)
+Servo ServoCamara;
 //Definiciones
+//L298N
 #define IN1 13
 #define IN2 12
 #define IN3 2
@@ -11,10 +14,13 @@ Pixy2 pixy;//Creando el objeto(Pixy)
 #define IN6 5
 #define IN7 7
 #define IN8 6
+//HC-SR-04
 #define Trigger1 14
 #define Trigger2 15
 #define Echo1 16
 #define Echo2 17
+//servo
+#define Ser 8 
 //Variables
 int pulso = 0;
 void setup(){
@@ -30,6 +36,10 @@ void setup(){
   pinMode(IN6, OUTPUT);
   pinMode(IN7, OUTPUT);
   pinMode(IN8, OUTPUT);
+  // Configura el pin servo como salida
+  pinMode(Ser, OUTPUT);
+  ServoCamara.attach(Ser);
+  ServoCamara.write(90);
   //Pines asociados a los sensores ultrasonicos
   pinMode(Trigger1, OUTPUT);
   pinMode(Trigger2, OUTPUT);
