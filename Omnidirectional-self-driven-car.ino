@@ -1,56 +1,16 @@
 //Bibliotecas
 #include <Pixy2.h>
 #include <Servo.h>
-//Objetos
+#include <Definiciones.h>
+#include<Variables.h>
+#include<Parametros.h>
+#include<Banderas.h>
+#include<FuncionesMovimiento.h>
+#include<Funciones.h>
+
+
 Pixy2 pixy;//Creando el objeto(Pixy)
 Servo ServoCamara;
-//Definiciones
-//L298N
-#define IN1 13
-#define IN2 12
-#define IN3 2
-#define IN4 3
-#define IN5 4
-#define IN6 5
-#define IN7 7
-#define IN8 6
-//HC-SR-04
-#define Trigger1 14
-#define Trigger2 15
-#define Echo1 16
-#define Echo2 17
-//servo
-#define Ser 8 
-//Encoder
-#define tacometro 21 
-//Variables
-//HC-SR-04
-int pulso = 0;
-//Distancia en cm medido por los sensores ultrasonicos
-int HC1=0;
-int HC2=0;
-//Caracterizacion de los motores
-const int PWMmin1 = 104;
-const int PWMmin2 = 98;
-const int PWMmin3 = 123;
-const int PWMmin4 = 116;
-//Encoder
-int ticks=0;
-//Seguimiento de linea
-int x0[5]={};//Array de coordenadas iniciales de los vectores 
-int y0[5]={};
-int x1[5]={};//Array de coordenadas finales de los vectores 
-int y1[5]={};
-int x0t=0;//Coordenadas del inicio del vector resultante
-int x1t=0;//Coordenadas del final del vector resultante
-int Xresultante=0;//Magnitud del vector resultante
-int CountL;//Contador de vectores detectados
-//Parametros
-//Distancia maxima para detectar un carrito en cm
-const int DistanciaMaximaCajon=50;
-//Banderas
-bool modo=0;
-bool modoPrevio=0;
 void setup(){
   Serial.begin(115200);//Inicializando comunicacion serial
   pixy.init(); //inicializando la camara
@@ -97,116 +57,10 @@ void loop(){
   }
   if(!modo){
     Xresultante=detectarLineas();
+  }else{
+    //alinear el vehiculo con el carril izquierdo , cambiar al modulo de deteccion de objetos y analizar el entorno en busqueda de un lugar de estacionamiento
   }
 
 
 }
-void Frontal(int dir) {
-  int FD=map(50,0,255,PWMmin1,255)-map(dir,-78,78,0,200);
-  int FI=map(50,0,255,PWMmin2,255)+map(dir,-78,78,0,200);
-  int TD=map(50,0,255,PWMmin3,255)-map(dir,-78,78,0,200);
-  int TI=map(50,0,255,PWMmin4,255)+map(dir,-78,78,0,200);
-  digitalWrite(IN1, FD); 
-  digitalWrite(IN2, LOW); // Motor derecho frontal adelante
-  digitalWrite(IN3, FI); 
-  digitalWrite(IN4, LOW); // Motor izquierdo frontal adelante
-  digitalWrite(IN5, TD); 
-  digitalWrite(IN6, LOW); // Motor derecho trasero adelante
-  digitalWrite(IN7, TI); 
-  digitalWrite(IN8, LOW); // Motor izquierdo trasero adelante
-}
-void Reversa() {
-  int FD=map(20,0,255,PWMmin1,255);
-  int FI=map(20,0,255,PWMmin2,255);
-  int TD=map(20,0,255,PWMmin3,255);
-  int TI=map(20,0,255,PWMmin4,255);
-  digitalWrite(IN1, LOW); 
-  digitalWrite(IN2, FD); // Motor derecho frontal adelante
-  digitalWrite(IN3, LOW); 
-  digitalWrite(IN4, FI); // Motor izquierdo frontal adelante
-  digitalWrite(IN5, LOW); 
-  digitalWrite(IN6, TD); // Motor derecho trasero adelante
-  digitalWrite(IN7, LOW); 
-  digitalWrite(IN8, TI); // Motor izquierdo trasero adelante
-}
-void LateralD(){
-  int FD=map(20,0,255,PWMmin1,255);
-  int FI=map(20,0,255,PWMmin2,255);
-  int TD=map(20,0,255,PWMmin3,255);
-  int TI=map(20,0,255,PWMmin4,255);
-  digitalWrite(IN1, FD);  // GIRO Reversa
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, LOW);  // GIRO Frente
-  digitalWrite(IN4, FI);
-  digitalWrite(IN5, TD);  // GIRO Frente
-  digitalWrite(IN6, LOW);
-  digitalWrite(IN7, LOW);  // GIRO Revers
-  digitalWrite(IN8, TI);
-}
-void LateralI(){
-  int FD=map(20,0,255,PWMmin1,255);
-  int FI=map(20,0,255,PWMmin2,255);
-  int TD=map(20,0,255,PWMmin3,255);
-  int TI=map(20,0,255,PWMmin4,255);
-  digitalWrite(IN1, LOW);  // GIRO Reversa
-  digitalWrite(IN2, FD);
-  digitalWrite(IN3, FI);  // GIRO Frente
-  digitalWrite(IN4, LOW);
-  digitalWrite(IN5, LOW);  // GIRO Frente
-  digitalWrite(IN6, TD);
-  digitalWrite(IN7, TI);  // GIRO Revers
-  digitalWrite(IN8, LOW);
-}
-void Giro() {
-  int FD=map(200,0,255,PWMmin1,255);
-  int FI=map(200,0,255,PWMmin2,255);
-  int TD=map(200,0,255,PWMmin3,255);
-  int TI=map(200,0,255,PWMmin4,255);
-  digitalWrite(IN1, FD); 
-  digitalWrite(IN2, LOW); // Motor derecho frontal adelante
-  digitalWrite(IN3, LOW); 
-  digitalWrite(IN4, FI); // Motor izquierdo frontal atrás
-  digitalWrite(IN5, TD); 
-  digitalWrite(IN6, LOW); // Motor derecho trasero adelante
-  digitalWrite(IN7, LOW); 
-  digitalWrite(IN8, TI); // Motor izquierdo trasero atrás
-}
-void Alto() {
-  digitalWrite(IN1, LOW); 
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, LOW); 
-  digitalWrite(IN4, LOW);
-  digitalWrite(IN5, LOW); 
-  digitalWrite(IN6, LOW);
-  digitalWrite(IN7, LOW); 
-  digitalWrite(IN8, LOW);
-}
-int Distancia(int Tr,int Ec){
-  digitalWrite(Tr,HIGH);
-  delay(1);
-  digitalWrite(Tr,LOW);
-  pulso = pulseIn(Ec,HIGH);
-  Serial.println(pulso/58.2);
-  return pulso/58.2;
-}
-void Encoder(){
-  ticks++;
-}
-int detectarLineas() {
-  Xresultante=0;
-  x0t=0;
-  x1t=0;
-  pixy.line.getAllFeatures();
-  CountL=pixy.line.numVectors;
-  for (int i=0; i<CountL; i++) {
-    x0[i] = pixy.line.vectors[i].m_x0-39;
-    x1[i] = pixy.line.vectors[i].m_x1-39;
-  }
-  for(int i=0;i<CountL;i++){
-    x0t=x0t+x0[i];
-    x1t=x1t+x1[i];
-  }
-  Xresultante=x1t-x0t;
-  Serial.println(Xresultante);
-  return(Xresultante);
-}
+
