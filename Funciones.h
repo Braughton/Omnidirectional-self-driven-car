@@ -3,10 +3,15 @@ int Distancia(int Tr,int Ec){
   delay(1);
   digitalWrite(Tr,LOW);
   pulso = pulseIn(Ec,HIGH);
-  Serial.print("HC=");
-  Serial.println(pulso/58.2);
+
   return pulso/58.2;
 }
 void Encoder(){
   ticks++;
+}
+void Espera(int espera){
+  ticks1=ticks+espera;
+  while (ticks<ticks1){
+
+  }
 }

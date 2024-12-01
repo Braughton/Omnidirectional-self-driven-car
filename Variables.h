@@ -9,7 +9,8 @@ const int PWMmin2 = 98;
 const int PWMmin3 = 123;
 const int PWMmin4 = 116;
 //Encoder
-int ticks=0;
+volatile int ticks=0;
+int ticks1;
 //Seguimiento de linea
 int x0[5]={};//Array de coordenadas iniciales de los vectores 
 int y0[5]={};
@@ -22,3 +23,5 @@ int CountL;//Contador de vectores detectados
 //Filtrado
 int Rebote=0;
 const int MaximoRebote=5;
+//Alineacion
+const int offset=10;
