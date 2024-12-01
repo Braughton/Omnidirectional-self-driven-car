@@ -26,6 +26,9 @@ Servo ServoCamara;
 //Variables
 //HC-SR-04
 int pulso = 0;
+//Distancia en cm medido por los sensores ultrasonicos
+int HC1=0;
+int HC2=0;
 //Caracterizacion de los motores
 const int PWMmin1 = 104;
 const int PWMmin2 = 98;
@@ -42,6 +45,12 @@ int x0t=0;//Coordenadas del inicio del vector resultante
 int x1t=0;//Coordenadas del final del vector resultante
 int Xresultante=0;//Magnitud del vector resultante
 int CountL;//Contador de vectores detectados
+//Parametros
+//Distancia maxima para detectar un carrito en cm
+const int DistanciaMaximaCajon=50;
+//Banderas
+bool modo=0;
+bool modoPrevio=0;
 void setup(){
   Serial.begin(115200);//Inicializando comunicacion serial
   pixy.init(); //inicializando la camara
@@ -69,9 +78,28 @@ void setup(){
   attachInterrupt(digitalPinToInterrupt(tacometro),Encoder,FALLING);
 }
 void loop(){
-int xres=detectarLineas();
-Serial.println(xres);
-delay(1000);
+  HC1=Distancia(Trigger1,Echo1);
+  delay(3);
+  HC2=Distancia(Trigger2,Echo2);
+  if (HC1>DistanciaMaximaCajon && HC2 > DistanciaMaximaCajon) {
+    modo=1;
+  }else{
+    modo=0;
+  }
+  if(modo!=modoPrevio){
+    if(modo){
+      Alto();
+    }else{
+      pixy.changeProg("line");
+    }
+    delay(50);
+    modoPrevio=modo;
+  }
+  if(!modo){
+    Xresultante=detectarLineas();
+  }
+
+
 }
 void Frontal(int dir) {
   int FD=map(50,0,255,PWMmin1,255)-map(dir,-78,78,0,200);
@@ -158,6 +186,7 @@ int Distancia(int Tr,int Ec){
   delay(1);
   digitalWrite(Tr,LOW);
   pulso = pulseIn(Ec,HIGH);
+  Serial.println(pulso/58.2);
   return pulso/58.2;
 }
 void Encoder(){
