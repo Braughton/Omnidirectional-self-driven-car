@@ -1,3 +1,5 @@
+#ifndef Definiciones_h
+#define Definiciones_h
 //L298N
 #define IN1 13
 #define IN2 12
@@ -16,3 +18,4 @@
 #define Ser 8 
 //Encoder
 #define tacometro 21 
+#endif

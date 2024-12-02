@@ -1,3 +1,5 @@
+#ifndef FuncionesMovimiento_h
+#define FuncionesMovimiento_h
 void Frontal(int dir) {
   int FD=map(50,0,255,PWMmin1,255)-map(dir,-78,78,0,200);
   int FI=map(50,0,255,PWMmin2,255)+map(dir,-78,78,0,200);
@@ -78,3 +80,4 @@ void Alto() {
   digitalWrite(IN7, LOW); 
   digitalWrite(IN8, LOW);
 }
+#endif

@@ -1,3 +1,5 @@
+#ifndef Variables_h
+#define Variables_h
 //HC-SR-04
 int pulso = 0;
 //Distancia en cm medido por los sensores ultrasonicos
@@ -25,3 +27,15 @@ int Rebote=0;
 const int MaximoRebote=5;
 //Alineacion
 const int offset=10;
+//Deteccion de objetos con la camara
+int NumeroDeObjetosDetectados=0;
+int x[4],ancho[4];
+int TamanoMinimoDelCajonDeEstacionamintoParalelo=150;//Paralelo150
+int EmEB=130;//Bateria
+int distanciaD[4],distanciaI[4];
+int CentroLugarEstacionamiento=0;
+int i=0;
+bool ModoDeEstacionamiento=0;
+int thredholdI=140;
+int thredholdD=160;
+#endif

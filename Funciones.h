@@ -1,3 +1,5 @@
+#ifndef Funciones_h
+#define Funciones_h
 int Distancia(int Tr,int Ec){
   digitalWrite(Tr,HIGH);
   delay(1);
@@ -15,3 +17,4 @@ void Espera(int espera){
 
   }
 }
+#endif
