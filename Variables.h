@@ -22,9 +22,6 @@ int x0t=0;//Coordenadas del inicio del vector resultante
 int x1t=0;//Coordenadas del final del vector resultante
 int Xresultante=0;//Magnitud del vector resultante
 int CountL;//Contador de vectores detectados
-//Filtrado
-int Rebote=0;
-const int MaximoRebote=5;
 //Alineacion
 const int offset=10;
 //Deteccion de objetos con la camara

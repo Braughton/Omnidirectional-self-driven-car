@@ -38,44 +38,32 @@ void setup(){
   //Configurando la interrupcion del encoder
   pinMode(tacometro,INPUT);
   attachInterrupt(digitalPinToInterrupt(tacometro),Encoder,FALLING);
-  Serial.println("Setup complete")
+  Serial.println("Setup complete");
 }
 void loop(){
-  Serial.println("Sensando distancia:")
-  HC1=Distancia(Trigger1,Echo1);
-  delay(3);
-  HC2=Distancia(Trigger2,Echo2);
-  Serial.println("");
-  if (HC1>DistanciaMaximaCajon && HC2 > DistanciaMaximaCajon) {
-    modo=1;
-  }else{
-    Rebote++;
-    if(Rebote>MaximoRebote){
-    modo=0;
-    Rebote=0;
+  while(!modo){
+    Serial.println("Sensando distancia:");
+    HC1=Distancia(Trigger1,Echo1);
+    delay(3);
+    HC2=Distancia(Trigger2,Echo2);
+    Serial.println("");
+    if (HC1>DistanciaMaximaCajon && HC2 > DistanciaMaximaCajon) {
+      modo=1;
+    }
+    if(modo!=modoPrevio){
+      if(modo){
+        Alto();
+      }
+      modoPrevio=modo;
+    }
+    if(!modo){
+      Serial.println("Siguiendo carril");
+      Xresultante=detectarLineas();
+      Frontal(Xresultante);
+      Serial.println("Direccion = " + Xresultante);
     }
   }
-  Serial.print("Espacio ")
-  if(modo){
-    Serial.println("ocupado");
-  }else {
-    Serial.println("vacio");
-  }
-  if(modo!=modoPrevio){
-    if(modo){
-      Alto();
-    }else{
-      pixy.changeProg("line");
-    }
-    delay(50);
-    modoPrevio=modo;
-  }
-  if(!modo){
-    Serial.println("Siguiendo carril")
-    Xresultante=detectarLineas();
-    Frontal(Xresultante);
-    Serial.println("Direccion = " + Xresultante)
-  }else if(!Alineado){
+  while(!Alineado){
     Serial.println("Alineando");
     Xresultante=detectarLineas() + offset;
     while(Xresultante!=0){
@@ -83,7 +71,7 @@ void loop(){
       Xresultante=detectarLineas() + offset;
       Serial.println(Xresultante);
       if (Xresultante<0){
-        Serial.println("Derecha")
+        Serial.println("Derecha");
         LateralD();
         Espera(1);
         Alto();
@@ -97,12 +85,14 @@ void loop(){
     Alineado=1;
     Serial.print("alineado");
     //Cambiar al modulo de deteccion de objetos y analizar el entorno en busqueda de un lugar de estacionamiento
-  }else{
-    Serial.println("Rotando camara");
-    Alto();
-    ServoCamara.write(0);
-    pixy.changeProg("color_connected_components");
-    delay(500);
+  }
+
+  Serial.println("Rotando camara");
+  Alto();
+  ServoCamara.write(0);
+  pixy.changeProg("color_connected_components");
+  delay(500);
+  while(!Estacionado){
     Serial.println("Reconociendo objetos");
     RutinaEstacionado();
   }

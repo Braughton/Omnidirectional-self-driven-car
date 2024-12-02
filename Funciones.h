@@ -7,7 +7,9 @@ int Distancia(int Tr,int Ec){
   digitalWrite(Tr,LOW);
   pulso = pulseIn(Ec,HIGH);
   distancia = pulso/58.2;
-  Serial.print("HC=" + distancia + "/t");
+  Serial.print("HC=");
+  Serial.print(distancia);
+  Serial.print("/t");
   return distancia;
 }
 void Encoder(){
@@ -17,7 +19,11 @@ void Espera(int espera){
   ticks1=ticks+espera;
   while (ticks<ticks1){
     int restantes = ticks1 - ticks;
-    Serial.println("Esperando " + espera + "faltan" + restantes);
+    Serial.print("Esperando ");
+    Serial.print(espera);
+    Serial.print("faltan");
+    Serial.println(restantes);
   }
+  Serial.print("Termino La Espera");
 }
 #endif
