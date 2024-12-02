@@ -4,4 +4,5 @@
 const int DistanciaMaximaCajon=50;
 //Pilsos del encoder para estacionarse en bateria
 const int EstacionadoParalelo=70;
+const int Giro90=40;
 #endif
